@@ -1,24 +1,203 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FNF</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#3157d5">
+<title>FNF One</title>
+<style>
+:root{--bg:#f4f7fc;--card:#fff;--text:#162033;--muted:#68758a;--line:#e3e8f2;--brand:#3157d5;--soft:#eef2ff;--shadow:0 12px 35px rgba(25,38,70,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+.top{height:68px;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 16px;position:sticky;top:0;z-index:5}
+.logo{font-size:25px;font-weight:800;letter-spacing:-1px}.logo span{font-weight:400}.tools{display:flex;gap:7px;align-items:center}.tool,.lang,.avatar{border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:11px;padding:9px 11px;font-size:14px}.avatar{width:39px;height:39px;border-radius:50%;font-weight:700;background:var(--soft)}
+main{max-width:1050px;margin:auto;padding:20px 15px 45px}
+.hero{background:linear-gradient(135deg,#fff,#eef2ff);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow)}
+.kicker{font-size:11px;font-weight:800;letter-spacing:1.4px;color:var(--brand);margin:0 0 8px}
+h1{font-size:clamp(30px,7vw,46px);line-height:1.05;margin:0 0 10px;letter-spacing:-1.5px}h1 span{color:var(--brand)}
+.hero p{color:var(--muted);line-height:1.55;margin:0 0 18px;max-width:700px}
+.primary{border:0;background:var(--brand);color:#fff;border-radius:12px;padding:12px 16px;font-weight:700;font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 24px}
+.stat,.service,.quick,.panel{background:var(--card);border:1px solid var(--line);border-radius:17px}
+.stat{padding:14px}.stat b{display:block;font-size:20px;margin-top:4px}.stat small{color:var(--muted)}
+h2{font-size:20px;margin:0 0 4px}.desc{margin:0 0 13px;color:var(--muted);font-size:13px}
+.services{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.service{padding:17px;min-height:170px;text-align:left;color:var(--text);cursor:pointer;display:flex;flex-direction:column;box-shadow:0 4px 15px rgba(25,38,70,.03)}
+.service:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.ico{font-size:31px;margin-bottom:15px}.service b{font-size:15px}.service small{color:var(--muted);line-height:1.35;margin-top:5px}.open{margin-top:auto;color:var(--brand);font-weight:700;font-size:12px;padding-top:14px}
+.quick{margin-top:18px;padding:18px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.action{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 13px}
+.panel{margin-top:18px;padding:18px;display:flex;gap:13px;align-items:center;min-height:90px}.panel .ico{margin:0}.panel p{margin:3px 0 0;color:var(--muted);font-size:13px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+@media(max-width:800px){.services{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:470px){.services{grid-template-columns:1fr}.hero{padding:21px}.top{padding:0 11px}.lang{display:none}}
+</style>
+<style>
+.meet-overlay{position:fixed;inset:0;background:rgba(10,16,30,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.meet-modal{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:22px;border:1px solid #dfe5ef;box-shadow:0 25px 70px rgba(0,0,0,.25);padding:20px}
+.meet-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.meet-head h2{margin:0}.close{border:0;background:#eef2f8;border-radius:10px;padding:8px 11px;font-weight:800}
+.meet-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}.meet-option{border:1px solid #dfe5ef;background:#f8faff;border-radius:15px;padding:16px;text-align:left;cursor:pointer}.meet-option b{display:block;margin-top:7px}.meet-option small{color:#68758a}
+.meet-stage{background:#101827;border-radius:17px;min-height:230px;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;padding:20px}.avatar-big{width:70px;height:70px;border-radius:50%;background:#3157d5;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;margin:auto}
+.meet-controls{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:14px}.meet-control{border:1px solid #dfe5ef;background:#fff;border-radius:11px;padding:10px 13px;font-weight:700}.meet-primary{background:#3157d5;color:#fff;border-color:#3157d5}.meet-danger{background:#fff0ef;color:#b42318}
+.meet-room{margin-top:14px;padding:13px;background:#f5f7fb;border-radius:12px;display:none}.meet-room code{font-weight:800}.copy{margin-left:7px;border:0;background:#fff;border-radius:8px;padding:6px 9px}
+@media(max-width:520px){.meet-grid{grid-template-columns:1fr}.meet-modal{padding:16px}}
+</style></head>
+
+<style>
+.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#eef3ff,#f7f9fd)}
+.auth-card{width:min(430px,100%);background:#fff;border:1px solid #e3e8f2;border-radius:24px;padding:28px;box-shadow:0 18px 50px rgba(25,38,70,.12)}
+.auth-brand{font-size:28px;font-weight:800;margin-bottom:6px}.auth-brand span{font-weight:400}
+.auth-sub{color:#68758a;line-height:1.5;margin:0 0 20px}
+.auth-tabs{display:flex;gap:7px;background:#f0f3f9;padding:5px;border-radius:12px;margin-bottom:18px}
+.auth-tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:9px;font-weight:700;color:#68758a}
+.auth-tabs button.active{background:#fff;color:#3157d5;box-shadow:0 2px 8px rgba(25,38,70,.08)}
+.field{margin:12px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.field input{width:100%;padding:12px;border:1px solid #dce2ed;border-radius:11px;font-size:14px;outline:none}.field input:focus{border-color:#3157d5}
+.password-wrap{position:relative}.password-wrap input{padding-right:46px}.eye{position:absolute;right:6px;top:5px;border:0;background:transparent;padding:8px;cursor:pointer}
+.auth-submit{width:100%;margin-top:8px;border:0;background:#3157d5;color:#fff;padding:13px;border-radius:11px;font-weight:800;font-size:14px}
+.auth-note{font-size:11px;color:#7a8596;margin-top:14px;line-height:1.45}
+.auth-error{color:#b42318;background:#fff0ef;border-radius:9px;padding:9px;font-size:12px;display:none;margin-bottom:10px}
+.logout-btn{position:fixed;right:14px;bottom:14px;border:1px solid #dce2ed;background:#fff;border-radius:10px;padding:9px 12px;font-weight:700;z-index:20}
+body.dark .auth-screen{background:#0f1420}.dark .auth-card{background:#171e2d;border-color:#2a3447}.dark .auth-sub,.dark .auth-note{color:#a8b0c0}.dark .auth-tabs{background:#20283a}.dark .auth-tabs button.active{background:#171e2d}
+@media(max-width:470px){.auth-card{padding:22px}}
+</style>
 <body>
-  <main class="card">
-    <h1>FNF</h1>
-    <p>Social network, messaging, mail, wallet and referral platform.</p>
-
-    <label>Password</label>
-    <div class="password-box">
-      <input id="password" type="password" placeholder="Enter password">
-      <button type="button" id="togglePassword" aria-label="Show password">👁</button>
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">FNF <span>One</span></div>
+    <p class="auth-sub">One account for Connect, Mail, Chat, Meet and Wallet.</p>
+    <div class="auth-tabs">
+      <button id="loginTab" class="active" onclick="switchAuth('login')">Login</button>
+      <button id="registerTab" onclick="switchAuth('register')">Register</button>
     </div>
+    <div id="authError" class="auth-error"></div>
+    <form id="authForm" onsubmit="submitAuth(event)">
+      <div class="field" id="nameField" style="display:none">
+        <label>Full name</label><input id="fullName" type="text" autocomplete="name" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label>Email</label><input id="email" type="email" autocomplete="email" placeholder="name@example.com" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <div class="password-wrap"><input id="password" type="password" autocomplete="current-password" placeholder="Enter password" required><button class="eye" type="button" onclick="togglePassword()">👁️</button></div>
+      </div>
+      <button class="auth-submit" id="authSubmit">Continue</button>
+    </form>
+    <div class="auth-note">Demo foundation only: this local test does not store real passwords or provide real account security. A proper backend, encrypted authentication, sessions and recovery flow will be added before production.</div>
+  </div>
+</div>
+<div id="dashboard" style="display:none">
+<header class="top">
+  <div class="logo">FNF <span>One</span></div>
+  <div class="tools">
+    <button class="tool" onclick="notify()">🔔</button>
+    <button class="tool" id="theme" onclick="theme()">🌙</button>
+    <button class="lang" onclick="language()">🌐 EN</button>
+    <button class="avatar">Z</button>
+  </div>
+</header>
+<main>
+<section class="hero">
+<p class="kicker">ONE PLACE • EVERYTHING CONNECTED</p>
+<h1>Welcome to <span>FNF One</span> 👋</h1>
+<p>Your social network, mail, chat, meetings and wallet — designed to work together in one simple platform.</p>
+<button class="primary" onclick="openMeet()">🎥 Start Meeting</button>
+</section>
 
-    <button class="primary">Continue</button>
-  </main>
-  <script src="app.js"></script>
-</body>
-</html>
+<section class="stats">
+<div class="stat">✉️<b>3</b><small>New Mail</small></div>
+<div class="stat">💬<b>2</b><small>New Messages</small></div>
+<div class="stat">🎥<b>1</b><small>Upcoming Meeting</small></div>
+<div class="stat">🔔<b>4</b><small>Notifications</small></div>
+</section>
+
+<section>
+<h2>FNF One Services</h2><p class="desc">Everything you need in one dashboard.</p>
+<div class="services">
+<button class="service" onclick="show('FNF Connect','Social network area selected. Feed, posts, friends and profiles will be added step by step.')"><span class="ico">🏠</span><b>FNF Connect</b><small>Social network, feed & friends</small><span class="open">Open →</span></button>
+<button class="service" onclick="show('FNF Mail','Mail area selected. Inbox, compose, sent mail and attachments will be added step by step.')"><span class="ico">✉️</span><b>FNF Mail</b><small>Inbox, sent & compose</small><span class="open">Open →</span></button>
+<button class="service" onclick="show('FNF Chat','Chat area selected. Private and group messaging will be added step by step.')"><span class="ico">💬</span><b>FNF Chat</b><small>Private & group messaging</small><span class="open">Open →</span></button>
+<button class="service" onclick="openMeet()"><span class="ico">🎥</span><b>FNF Meet</b><small>Group video meetings</small><span class="open">Open →</span></button>
+<button class="service" onclick="show('FNF Wallet','Wallet area selected. Secure wallet, KYC and payment integrations will be developed later with appropriate compliance.')"><span class="ico">💰</span><b>FNF Wallet</b><small>Wallet & payment features</small><span class="open">Open →</span></button>
+</div>
+</section>
+
+<section class="quick"><h2>Quick Actions</h2><p class="desc">Start common tasks without leaving the dashboard.</p>
+<div class="actions">
+<button class="action" onclick="show('Create Post','Post creation area selected.')">＋ Create Post</button>
+<button class="action" onclick="show('Compose Mail','Mail composer selected.')">✉ Compose Mail</button>
+<button class="action" onclick="show('New Chat','New chat selected.')">＋ New Chat</button>
+<button class="action" onclick="openMeet()">🎥 Start Meeting</button>
+</div></section>
+
+<section class="panel" id="panel"><span class="ico">✨</span><div><h2>Ready when you are</h2><p>Select a service or quick action to preview it here.</p></div></section>
+</main>
+<footer>FNF One MVP v3 • Standalone foundation test</footer>
+<script>
+function show(t,m){document.getElementById('panel').innerHTML='<span class="ico">✨</span><div><h2>'+t+'</h2><p>'+m+'</p></div>';document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function theme(){document.body.classList.toggle('dark');document.getElementById('theme').textContent=document.body.classList.contains('dark')?'☀️':'🌙';}
+function language(){alert('Language system foundation is ready. More languages will be added in future versions.');}
+function notify(){alert('Notifications center — foundation ready.');}
+
+let authMode="login";
+function switchAuth(mode){
+  authMode=mode;
+  document.getElementById("loginTab").classList.toggle("active",mode==="login");
+  document.getElementById("registerTab").classList.toggle("active",mode==="register");
+  document.getElementById("nameField").style.display=mode==="register"?"block":"none";
+  document.getElementById("authSubmit").textContent=mode==="register"?"Create account":"Continue";
+  document.getElementById("authError").style.display="none";
+}
+function togglePassword(){
+  const p=document.getElementById("password");
+  p.type=p.type==="password"?"text":"password";
+}
+function submitAuth(e){
+  e.preventDefault();
+  const email=document.getElementById("email").value.trim();
+  const name=document.getElementById("fullName").value.trim();
+  if(authMode==="register" && !name){return showAuthError("Please enter your name.");}
+  if(!email){return showAuthError("Please enter a valid email.");}
+  document.getElementById("authScreen").style.display="none";
+  document.getElementById("dashboard").style.display="block";
+  document.getElementById("logoutBtn").style.display="block";
+}
+function showAuthError(t){const e=document.getElementById("authError");e.textContent=t;e.style.display="block"}
+function logout(){
+  document.getElementById("dashboard").style.display="none";
+  document.getElementById("logoutBtn").style.display="none";
+  document.getElementById("authScreen").style.display="flex";
+  document.getElementById("password").value="";
+}
+
+function openMeet(){document.getElementById('meetOverlay').style.display='flex'}
+function closeMeet(){document.getElementById('meetOverlay').style.display='none'}
+function createMeeting(){
+ const id='FNF-'+Math.floor(100000+Math.random()*900000);
+ document.getElementById('roomId').textContent=id; document.getElementById('roomBox').style.display='block';
+ document.getElementById('meetStage').innerHTML='<div><div class="avatar-big">Z</div><h2 style="margin:12px 0 5px">Ready to start</h2><p style="margin:0;color:#b9c2d2">Room '+id+' is prepared for participants.</p></div>';
+}
+function joinMeeting(){
+ const id=prompt('Enter Meeting ID or link:');
+ if(!id)return;
+ document.getElementById('roomId').textContent=id;document.getElementById('roomBox').style.display='block';
+ document.getElementById('meetStage').innerHTML='<div><div class="avatar-big">→</div><h2 style="margin:12px 0 5px">Join preview</h2><p style="margin:0;color:#b9c2d2">Meeting ID: '+escapeHtml(id)+'</p></div>';
+}
+function toggleMic(b){b.textContent=b.textContent.includes('On')?'🔇 Mic Off':'🎤 Mic On'}
+function toggleCam(b){b.textContent=b.textContent.includes('On')?'📷 Camera Off':'📷 Camera On'}
+function copyRoom(){navigator.clipboard?.writeText(document.getElementById('roomId').textContent);}
+function escapeHtml(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+</script>
+
+<div id="meetOverlay" class="meet-overlay" onclick="if(event.target===this)closeMeet()">
+  <div class="meet-modal">
+    <div class="meet-head"><div><div class="kicker">FNF MEET</div><h2>Start or join a meeting</h2></div><button class="close" onclick="closeMeet()">✕</button></div>
+    <div class="meet-grid">
+      <button class="meet-option" onclick="createMeeting()">🎥<b>Create Meeting</b><small>Start a new meeting room.</small></button>
+      <button class="meet-option" onclick="joinMeeting()">🔗<b>Join Meeting</b><small>Enter a meeting ID or link.</small></button>
+    </div>
+    <div id="meetStage" class="meet-stage"><div><div class="avatar-big">Z</div><h2 style="margin:12px 0 5px">Meeting preview</h2><p style="margin:0;color:#b9c2d2">Your camera and microphone controls will appear here.</p></div></div>
+    <div id="roomBox" class="meet-room">Meeting ID: <code id="roomId">FNF-000000</code><button class="copy" onclick="copyRoom()">Copy</button></div>
+    <div class="meet-controls"><button class="meet-control" onclick="toggleMic(this)">🎤 Mic On</button><button class="meet-control" onclick="toggleCam(this)">📷 Camera On</button><button class="meet-control">💬 Chat</button><button class="meet-control">🖥️ Share</button><button class="meet-control meet-danger" onclick="closeMeet()">🚪 Leave</button></div>
+    <p class="auth-note">Prototype stage: this screen prepares the meeting flow. Real multi-person audio/video requires a secure backend and real-time WebRTC/SFU infrastructure, which we will add later.</p>
+  </div>
+</div>
+</div><button id="logoutBtn" class="logout-btn" style="display:none" onclick="logout()">Log out</button></body></html>
