@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#3157d9">
+  <title>FNF One - Create Account</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #172033;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .register-box {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.10);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .logo span {
+      color: #3157d9;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 16px 0 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d7dce7;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #3157d9;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 55px;
+    }
+
+    .eye {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .register-btn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 15px;
+      border: 0;
+      border-radius: 12px;
+      background: #3157d9;
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 16px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 22px;
+      color: #6b7280;
+    }
+
+    .login a {
+      color: #3157d9;
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="register-box">
+
+    <div class="logo">
+      FNF <span>One</span>
+    </div>
+
+    <div class="subtitle">
+      Create your FNF One account
+    </div>
+
+    <form id="registerForm">
+
+      <label for="name">Full Name</label>
+      <input
+        id="name"
+        type="text"
+        placeholder="Enter your full name"
+        required
+      >
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        required
+      >
+
+      <label for="password">Password</label>
+
+      <div class="password-wrap">
+        <input
+          id="password"
+          type="password"
+          placeholder="Create a password"
+          required
+        >
+
+        <button
+          type="button"
+          class="eye"
+          id="togglePassword"
+          aria-label="Show password"
+        >👁️</button>
+      </div>
+
+      <label for="confirmPassword">Confirm Password</label>
+
+      <div class="password-wrap">
+        <input
+          id="confirmPassword"
+          type="password"
+          placeholder="Confirm your password"
+          required
+        >
+
+        <button
+          type="button"
+          class="eye"
+          id="toggleConfirmPassword"
+          aria-label="Show password"
+        >👁️</button>
+      </div>
+
+      <button type="submit" class="register-btn">
+        Create Account
+      </button>
+
+      <div class="message" id="message"></div>
+
+    </form>
+
+    <div class="login">
+      Already have an account?
+      <a href="login.html">Login</a>
+    </div>
+
+  </main>
+
+  <script>
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
+
+    const togglePassword = document.getElementById("togglePassword");
+    const toggleConfirmPassword =
+      document.getElementById("toggleConfirmPassword");
+
+    const registerForm = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+
+    togglePassword.addEventListener("click", () => {
+      if (password.type === "password") {
+        password.type = "text";
+        togglePassword.textContent = "🙈";
+      } else {
+        password.type = "password";
+        togglePassword.textContent = "👁️";
+      }
+    });
+
+    toggleConfirmPassword.addEventListener("click", () => {
+      if (confirmPassword.type === "password") {
+        confirmPassword.type = "text";
+        toggleConfirmPassword.textContent = "🙈";
+      } else {
+        confirmPassword.type = "password";
+        toggleConfirmPassword.textContent = "👁️";
+      }
+    });
+
+    registerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const pass = password.value;
+      const confirmPass = confirmPassword.value;
+
+      if (!name || !email || !pass || !confirmPass) {
+        message.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      if (pass !== confirmPass) {
+        message.textContent = "Passwords do not match.";
+        return;
+      }
+
+      message.textContent = "Registration form is ready for the next step.";
+    });
+  </script>
+
+</body>
+</html>
